@@ -123,13 +123,13 @@ public class Lab3 extends ConsoleUI<Commands> {
                 System.out.println(target);
                 FileCreateAction fileCreate = new FileCreateAction(target);
 
-                if(fileCreate.getThread().isAlive()) {
+                fileCreate.start(); 
                     try {
                         fileCreate.close();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
+                
 
                 break;
 

@@ -1,37 +1,42 @@
 package ru.avalon.java.actions;
 
-import org.w3c.dom.ls.LSOutput;
-
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class FileCreateAction implements Action {
-    String target;
-    Thread thread;
-
-    public FileCreateAction(String target) {
-        this.target = target;
+    private String filename;
+    
+    public FileCreateAction(String filename) {
+        this.filename = filename;
     }
-
+    
+    @Override
+    public void start() {
+        new Thread(this).run();
+        System.out.println("Запущен поток создания файла");
+    }
+    
+    @Override
     public void run() {
-        Path newFilePath = Paths.get(target);
         try {
-            Files.createFile(newFilePath);
-        } catch (IOException e) {
-            e.printStackTrace();
+            File file = new File(filename);
+            if (file.createNewFile()) {
+                System.out.printf("Файл %s создан\n", filename);
+            } else {
+                System.out.printf("Файл с имененм %s уже существует", filename);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(FileCreateAction.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }
 
-        public void close () throws Exception {
-            System.out.println("Создание файла завершено, для завершения программы введите 'exit'");
-        }
-
-    public Thread getThread() {
-        return thread;
+    @Override
+    public void close() throws Exception {
+        filename = null;
     }
-
-    }
-
+    
+}
